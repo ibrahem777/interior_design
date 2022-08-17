@@ -1,13 +1,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/src/size_extension.dart';
+import 'package:interior_design_app/src/models/category.dart';
 import 'package:interior_design_app/src/utils/my_colors.dart';
 
 class CategoriesListWidget extends StatefulWidget {
   final Function(int id) onChange;
+  final List<Category>items;
   const CategoriesListWidget({
     Key key,
     this.onChange,
+    this.items,
   }) : super(key: key);
 
   @override
@@ -49,17 +52,17 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget> {
             //   },
             // ),
 
-            ...categories.map((e) {
+            ...widget.items.map((e) {
 
               return Column(
                 children: [
                   CategoryButton(
-                    title:e,
-                    isSelected:  selectedCategoryId==categories.indexOf(e)-1,
+                    title:e.name,
+                    isSelected:  selectedCategoryId==e.id,
                     onTap: (){
-                      if( selectedCategoryId==categories.indexOf(e)-1)return;
+                      if( selectedCategoryId==e.id)return;
                       setState(() {
-                        selectedCategoryId=categories.indexOf(e)-1;
+                        selectedCategoryId=e.id;
                       });
                       widget.onChange(selectedCategoryId);
                     },

@@ -1,4 +1,4 @@
-package com.example.interior_design_app
+package com.design.app
 
 import io.flutter.embedding.android.FlutterActivity
 

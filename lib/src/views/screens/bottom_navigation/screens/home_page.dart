@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/src/size_extension.dart';
+import 'package:interior_design_app/src/models/category.dart';
+import 'package:interior_design_app/src/models/service.dart';
+import 'package:interior_design_app/src/reposoteries/firebase_reposotery.dart';
 import 'package:interior_design_app/src/utils/constants.dart';
 import 'package:interior_design_app/src/utils/my_colors.dart';
 import 'package:interior_design_app/src/views/components/categories_component.dart';
@@ -27,10 +31,19 @@ class _HomePageScreenState extends State<HomePageScreen> {
       body:
       Column(
         children: [
-          CategoriesListWidget(
-            onChange: (selectedStatus){
-              // refresh();
-            },
+          FutureBuilder<List<Category>>(
+            future: getAllCategories(),
+            builder: (context, snapshot) {
+              return
+                snapshot.connectionState==ConnectionState.waiting?
+                Center(child:CircularProgressIndicator()):
+                CategoriesListWidget(
+                items: snapshot.data,
+                onChange: (selectedStatus){
+                  // refresh();
+                },
+              );
+            }
           ),
           SizedBox(
             height: 10.h,
@@ -59,15 +72,30 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       ),
                     ),
                   ),
-              SliverList(
-                delegate:
-                SliverChildBuilderDelegate(
+                  SliverToBoxAdapter(
 
-                    (index,context)=>ServiceItemWidget(),
-                  childCount: 3,
+                child:
+                    StreamBuilder(
+                      stream: getAllServices(),
+                      builder: (context, snapshot) {
+                        return
+                          snapshot.connectionState==ConnectionState.waiting?
+                          Center(child:CircularProgressIndicator()):
 
-              ),
-)   ,
+                        ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context,index)=>ServiceItemWidget(
+                            item: snapshot.data[index],
+
+                          ),
+                          itemCount: snapshot.data.length,
+
+                        );
+                      }
+                    ),
+
+              )   ,
                   SliverToBoxAdapter(
                     child: Container(
                       margin: EdgeInsets.only(bottom: 10.h),
@@ -85,15 +113,31 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       ),
                     ),
                   ),
-                  SliverList(
-                    delegate:
-                    SliverChildBuilderDelegate(
+                  SliverToBoxAdapter(
 
-                          (index,context)=>const OfferItemWidget(),
-                      childCount: 3,
+                    child:
+                    StreamBuilder(
+                        stream: getAllOffers(),
+                        builder: (context, snapshot) {
+                          return
+                            snapshot.connectionState==ConnectionState.waiting?
+                            Center(child:CircularProgressIndicator()):
 
+                            ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context,index)=>OfferItemWidget(
+                                item: snapshot.data[index],
+
+                              ),
+                              itemCount: snapshot.data.length,
+
+                            );
+                        }
                     ),
+
                   )   ,
+
                 ],
               ),
             ),
