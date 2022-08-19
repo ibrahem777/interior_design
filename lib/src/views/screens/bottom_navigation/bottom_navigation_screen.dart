@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:interior_design_app/src/models/bottom_navigator_item.dart';
 import 'package:interior_design_app/src/views/components/bottom_navigation.dart';
 import 'package:interior_design_app/src/views/screens/bottom_navigation/screens/home_page.dart';
+import 'package:interior_design_app/src/views/screens/bottom_navigation/screens/prayer_times_screen.dart';
 
 
 
@@ -63,9 +64,9 @@ class _MainScreenBodyState extends State<BottomNavigationScreen> {
                 title:  'Home',
                 icon:Icons.home,page: HomePageScreen(),
               ),
-              BottomNavigationItem(
+              const BottomNavigationItem(
                 title:  'Gallery',
-                icon:Icons.wallpaper,page: Container(),
+                icon:Icons.wallpaper,page: PrayerTimeScreen(),
               ),
               BottomNavigationItem(
                 title:  'My Services',
